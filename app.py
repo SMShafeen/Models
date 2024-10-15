@@ -38,10 +38,10 @@ bart_tokenizer = AutoTokenizer.from_pretrained(bart_model_id)
 bart_model = AutoModelForSeq2SeqLM.from_pretrained(bart_model_id)
 summarizer = pipeline("summarization", model=bart_model, tokenizer=bart_tokenizer)
 
-# llama_model_id = "meta-llama/Llama-2-7b-chat-hf"
-# llama_tokenizer = AutoTokenizer.from_pretrained(llama_model_id)
-# llama_model = AutoModelForCausalLM.from_pretrained(llama_model_id, torch_dtype=torch_dtype).to(device)
-# llama_summarizer = pipeline("text-generation", model=llama_model, tokenizer=llama_tokenizer, max_new_tokens=150, device=device)
+llama_model_id = "meta-llama/Llama-2-7b-chat-hf"
+llama_tokenizer = AutoTokenizer.from_pretrained(llama_model_id)
+llama_model = AutoModelForCausalLM.from_pretrained(llama_model_id, torch_dtype=torch_dtype).to(device)
+llama_summarizer = pipeline("text-generation", model=llama_model, tokenizer=llama_tokenizer, max_new_tokens=150, device=device)
 
 @app.route('/')
 def home():
@@ -65,8 +65,8 @@ def transcribe_and_summarize():
     summary_result = summarizer(transcription_text, max_length=250, min_length=30, do_sample=False)
     summary_text = summary_result[0]['summary_text']
 
-    # llama_summary_result = llama_summarizer(transcription_text)
-    # llama_summary_text = llama_summary_result[0]['generated_text']
+    llama_summary_result = llama_summarizer(transcription_text)
+    llama_summary_text = llama_summary_result[0]['generated_text']
 
     return jsonify({"transcription": transcription_text, "summary": summary_text})
 
